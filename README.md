@@ -1,4 +1,4 @@
-# dev-services
+# local-traefik
 
 > A bundled traefik / dnsmasq service, with an example www site
 
