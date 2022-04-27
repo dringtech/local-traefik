@@ -1,0 +1,43 @@
+version: "3.9"
+services:
+  router:
+    image: traefik:2.6
+    ports:
+      - 80:80
+      - 8080:8080
+      - 10053:10053/tcp
+      - 10053:10053/udp
+    volumes:
+      - ./traefik.yml:/etc/traefik/traefik.yml
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+  dns:
+    image: jpillora/dnsmasq
+    volumes:
+      - ./dnsmasq.conf:/etc/dnsmasq.conf
+    logging:
+      options:
+        max-size: 100m
+    environment:
+      - HTTP_USER=${DNS_USERNAME}
+      - HTTP_PASS=${DNS_PASSWORD}
+    restart: always
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.dns.rule=Host(`dns.${DOMAIN}`)
+      - traefik.http.routers.dns.entrypoints=web
+      - traefik.http.services.dns.loadbalancer.server.port=8080
+      - traefik.tcp.routers.dns.rule=HostSNI(`*`)
+      - traefik.tcp.routers.dns.entrypoints=dnstcp
+      - traefik.tcp.services.dns.loadbalancer.server.port=53
+      - traefik.udp.routers.dns.entrypoints=dnsudp
+      - traefik.udp.services.dns.loadbalancer.server.port=53
+
+
+  test-www:
+    image: nginx
+    volumes:
+      - ./www:/usr/share/nginx/html:ro
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.www.rule=Host(`test-www.${DOMAIN}`)
+      - traefik.http.routers.www.entrypoints=web

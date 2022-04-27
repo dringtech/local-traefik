@@ -1,0 +1,25 @@
+## traefik.yml
+
+# Docker configuration backend
+providers:
+  docker:
+    exposedByDefault: false
+    # defaultRule: "Host(`{{ trimPrefix `/` .Name }}.local.dring.tech`)"
+
+# API and dashboard configuration
+api:
+  insecure: true
+
+#log:
+#  level: DEBUG
+
+entrypoints:
+  dnstcp:
+    address: ":10053/tcp"
+  dnsudp:
+    address: ":10053/udp"
+  web:
+    address: ":80/tcp"
+
+# ping: {}
+accessLog: {}
