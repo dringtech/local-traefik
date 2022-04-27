@@ -22,8 +22,8 @@ Run `docker-compose up -d` from the root directory of the repo.
 Check that you can access:
 
 * Traefik - <https://localhost:8080>
-* dns.<YOUR DOMAIN> (Login with the username and password you set)
-* test-www.<YOUR DOMAIN> (It should say "Hello world!", of course)
+* `dns.<YOUR DOMAIN>` (Login with the username and password you set)
+* `test-www.<YOUR DOMAIN>` (It should say "Hello world!", of course)
 
 ## Registering resolver in MacOS Monterey
 
