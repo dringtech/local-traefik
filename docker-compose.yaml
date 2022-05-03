@@ -4,12 +4,18 @@ services:
     image: traefik:2.6
     ports:
       - 80:80
+      - 443:443
       - 8080:8080
       - 10053:10053/tcp
       - 10053:10053/udp
     volumes:
-      - ./traefik.yml:/etc/traefik/traefik.yml
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      # Map the base configuration into the container
+      - ./config/traefik.yml:/etc/traefik/traefik.yml
+      # Map the dynamic configuration into the container
+      - ./config/dynamic.yml:/etc/traefik/dynamic.yml:ro
+      # Map the certificats into the container
+      - ./certs:/etc/certs:ro
   dns:
     image: jpillora/dnsmasq
     volumes:
@@ -24,7 +30,10 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.dns.rule=Host(`dns.${DOMAIN}`)
-      - traefik.http.routers.dns.entrypoints=web
+      - traefik.http.routers.dns.entrypoints=web,secureweb
+      - traefik.http.routers.dns.tls=true
+      - traefik.http.routers.dns.tls.domains.main=localdev.dring.tech
+      - traefik.http.routers.dns.tls.domains.sans=*.localdev.dring.tech
       - traefik.http.services.dns.loadbalancer.server.port=8080
       - traefik.tcp.routers.dns.rule=HostSNI(`*`)
       - traefik.tcp.routers.dns.entrypoints=dnstcp
@@ -40,4 +49,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.www.rule=Host(`test-www.${DOMAIN}`)
-      - traefik.http.routers.www.entrypoints=web
+      - traefik.http.routers.www.entrypoints=web,secureweb
+      - traefik.http.routers.www.tls=true
+      - traefik.http.routers.www.tls.domains.main=localdev.dring.tech
+      - traefik.http.routers.www.tls.domains.sans=*.localdev.dring.tech

@@ -25,6 +25,20 @@ Check that you can access:
 * `dns.<YOUR DOMAIN>` (Login with the username and password you set)
 * `test-www.<YOUR DOMAIN>` (It should say "Hello world!", of course)
 
+## Securing
+
+> https://github.com/Heziode/traefik-v2-https-ssl-localhost
+
+```
+mkcert -install
+```
+
+Generate certificate for your domain and their sub-domains.
+
+```
+mkcert -cert-file certs/local-cert.pem -key-file certs/local-key.pem "<your preferred domain>" "*.<your preferred domain>"
+```
+
 ## Registering resolver in MacOS Monterey
 
 Create resolver file named for the domain you defined above e.g. `/etc/resolver/localdev.example.com`.

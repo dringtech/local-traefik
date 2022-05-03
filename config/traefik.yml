@@ -5,6 +5,9 @@ providers:
   docker:
     exposedByDefault: false
     # defaultRule: "Host(`{{ trimPrefix `/` .Name }}.local.dring.tech`)"
+  file:
+    filename: /etc/traefik/dynamic.yml
+    watch: true
 
 # API and dashboard configuration
 api:
@@ -20,6 +23,20 @@ entrypoints:
     address: ":10053/udp"
   web:
     address: ":80/tcp"
+#    http:
+#      redirections:
+#        entryPoint:
+#          to: secureweb
+#          scheme: https
+  secureweb:
+    address: ":443/tcp"
+
+tls:
+  stores:
+    default:
+      defaultCertificate:
+        certFile: "/etc/certs/local-cert.pem"
+        keyFile: "/etc/certs/local-key.pem"
 
 # ping: {}
 accessLog: {}
