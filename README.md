@@ -17,13 +17,17 @@ DNS_PASSWORD=<password for dns web manager>
 Make sure you update the dnsmasq config with the domain name! Currently looking for a way to automate this.
 An example is provided in `dnsmasq.conf-EXAMPLE`. Copy this to `dnsmasq.conf` and set the domain.
 
+Create the dev network using `docker network create dev`.
+
 Run `docker-compose up -d` from the root directory of the repo.
 
 Check that you can access:
 
-* Traefik - <https://localhost:8080>
-* `dns.<YOUR DOMAIN>` (Login with the username and password you set)
-* `test-www.<YOUR DOMAIN>` (It should say "Hello world!", of course)
+* Traefik - <`http://localhost:8080`> or `https://traefik.<YOUR DOMAIN>`
+* `https://dns.<YOUR DOMAIN>` (Login with the username and password you set)
+
+Start the test-www service using `docker-compose -f test-www.yaml up` then check you can access
+`https://test-www.<YOUR DOMAIN>`. (It should say "Hello world!", of course!)
 
 ## Securing
 

@@ -16,6 +16,8 @@ services:
       - ./config/dynamic.yml:/etc/traefik/dynamic.yml:ro
       # Map the certificats into the container
       - ./certs:/etc/certs:ro
+    networks:
+      - dev
   dns:
     image: jpillora/dnsmasq
     volumes:
@@ -40,16 +42,9 @@ services:
       - traefik.tcp.services.dns.loadbalancer.server.port=53
       - traefik.udp.routers.dns.entrypoints=dnsudp
       - traefik.udp.services.dns.loadbalancer.server.port=53
+    networks:
+      - dev
 
-
-  test-www:
-    image: nginx
-    volumes:
-      - ./www:/usr/share/nginx/html:ro
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.www.rule=Host(`test-www.${DOMAIN}`)
-      - traefik.http.routers.www.entrypoints=web,secureweb
-      - traefik.http.routers.www.tls=true
-      - traefik.http.routers.www.tls.domains.main=localdev.dring.tech
-      - traefik.http.routers.www.tls.domains.sans=*.localdev.dring.tech
+networks:
+  dev:
+    external: true
